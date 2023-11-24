@@ -9,11 +9,14 @@ export const MyInformationProvider = ({ children }) => {
         projectsCount: 100
     })
     const [projectsInformation, setProjectsInformation] = useState([])
+    const [reviews, setReviews] = useState([])
+
     // states
     return (
         <MyInformationContext.Provider value={{
             myInfo, setMyInfo,
-            projectsInformation, setProjectsInformation
+            projectsInformation, setProjectsInformation,
+            reviews, setReviews
         }}>
             {children}
         </MyInformationContext.Provider>
