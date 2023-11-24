@@ -1,48 +1,56 @@
+import Image from 'react-bootstrap/Image';
+import { useEffect, useState } from "react"
+import axios from "axios"
+import Carousel from 'react-bootstrap/Carousel';
+import {APIs} from "../const/APIs";
 import {useMyInformation} from "../context/PersonalInfoContext";
 
+async function getReviews() {
+    try {
+        const res = await axios.get(APIs.PORTFOLIO.REVIEWS.GET_ALL_REVIEWS);
+        return res.data.data;
+    }catch(err) {
+        return {error: err.message};
+    }
+}
 
 function Reviews() {
-    const {myInfo} = useMyInformation()
+    const [error, setError] = useState(null);
+    const { reviews, setReviews } = useMyInformation();
+
+    useEffect(() => {
+        (async () => {
+            const data = await getReviews();
+            if(data.error) {
+                console.log("error@getReviews: ", data.error);
+                setError(data.error)
+            }else {
+                setReviews(data);
+                console.log("reviews@getReviews: ", data);
+            }
+        })()
+    }, []);
 
     return (
-       <div>
-           <div className="d-flex align-items-center justify-content-center">
-               <img height={100} width={100} src="https://avatars.githubusercontent.com/u/75601362?v=4" alt=""/>
-           </div>
-           <h3 className="text-center">
-               {myInfo.name}
-           </h3>
-           <p className="text-center">
-               Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquam aperiam dolorum ea labore libero nemo obcaecati ratione repellendus voluptate? Culpa nisi optio qui quod sed unde. Consequatur, numquam quod!
-           </p>
-           <div className={"d-flex align-items-center justify-content-center p-2"}>
-               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#f3a344"
-                    className="bi bi-star-fill" viewBox="0 0 16 16">
-                   <path
-                       d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
-               </svg>
-               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#f3a344"
-                    className="bi bi-star-fill" viewBox="0 0 16 16">
-                   <path
-                       d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
-               </svg>
-               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#f3a344"
-                    className="bi bi-star-fill" viewBox="0 0 16 16">
-                   <path
-                       d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
-               </svg>
-               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#f3a344"
-                    className="bi bi-star-fill" viewBox="0 0 16 16">
-                   <path
-                       d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
-               </svg>
-               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#f3a344"
-                    className="bi bi-star-fill" viewBox="0 0 16 16">
-                   <path
-                       d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
-               </svg>
-           </div>
-       </div>
+    <div className={"my-4"}>
+        <Carousel data-bs-theme="dark">
+            {reviews?.map((review) => {
+                return (
+                    <Carousel.Item>
+                        <div className="d-flex justify-content-center flex-column align-items-center">
+                            <Image style={{height: '150px', width: '150px'}}
+                                   src={review.clientImageURL}
+                                   roundedCircle/>
+                            <h1>{review.clientName}</h1>
+                            <p>{review.review}</p>
+                        </div>
+
+                    </Carousel.Item>
+                )
+            })}
+
+        </Carousel>
+    </div>
     );
 }
 
