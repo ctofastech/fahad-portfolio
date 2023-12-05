@@ -3,13 +3,16 @@ import {useEffect, useState} from "react";
 import {useEcommerceData} from "../context/EcommerceContext";
 import {APIs} from "../const/APIs";
 import axios from "axios";
-function AllProducts() {
-    const {product,setProducts} = useEcommerceData()
+import {Link} from "react-router-dom";
 
-    const [error, setError] = useState(false)
+
+function AllProducts() {
+    const {product,setProducts, error, setError} = useEcommerceData()
+
 
     const fetchAllProductsData = async () => {
-        await axios.get(APIs.ECOMMERCE.PRODUCTS.GET_ALL_PRODUCT).then(res=> {
+        await axios.get(APIs.ECOMMERCE.PRODUCTS.ADD_PRODUCT).then(res=> {
+            console.log(res)
             setProducts(res.data)
             setError(false)
         }).catch(err=> {
@@ -35,8 +38,8 @@ function AllProducts() {
                                <img className="card-img-top" src={p.image} alt="Card image cap"/>
                                <div className="card-body">
                                    <h5 className="card-title">{p.title}</h5>
-                                   <p className="card-text">{p.description}</p>
-                                   <a href="#" className="btn btn-dark">Go somewhere</a>
+                                   <p className="card-text">Price {p.price}</p>
+                                   <Link to={`/products/${p.id}`} className="btn btn-dark">Visit Product</Link>
                                </div>
                            </div>
                        </div>
